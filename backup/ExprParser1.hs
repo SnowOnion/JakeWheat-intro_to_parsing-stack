@@ -8,8 +8,6 @@ import Control.Monad (void)
 import qualified Text.Parsec.String.Expr as E
 import FunctionsAndTypesForParsing
 
-import ExprDef(Expr(..))
-
 
 whitespace :: Parser ()
 whitespace = void $ many $ oneOf "\r\n \t"
@@ -67,21 +65,37 @@ parens :: Parser GenericExpr
 parens = between (symbol "(") (symbol ")") genericExpr
 
 
+data Expr = Lit Int -- Double
+  | Add Expr Expr
+  | Sub Expr Expr
+  | Mul Expr Expr
+  | Div Expr Expr
+    deriving (Show, Eq)
 
--- (BinaryOp (BinaryOp (BinaryOp (Num 0) "*" (Num 1)) "/" (Num 2)) "*" (Num 3))
-src =
-  BinaryOp
-  (BinaryOp
-   (BinaryOp (Num 0) "*" (Num 1))
-    "/" (Num 2))
-   "*" (Num 3)
 
-genericExprToExpr :: GenericExpr -> Expr
-genericExprToExpr (Num x) = Lit (fromIntegral x :: Double)
-genericExprToExpr (PrefixOp "-" ge) = Sub (Lit 0) (genericExprToExpr ge)
-genericExprToExpr (BinaryOp ge1 op ge2) = case op of
-  "*" -> Mul (genericExprToExpr ge1) (genericExprToExpr ge2)
-  "/" -> Div (genericExprToExpr ge1) (genericExprToExpr ge2)
-  "+" -> Add (genericExprToExpr ge1) (genericExprToExpr ge2)
-  "-" -> Sub (genericExprToExpr ge1) (genericExprToExpr ge2)
-genericExprToExpr (Var n) = Var1 n
+
+
+-- table :: [[E.Operator GenericExpr]]
+-- table = [
+--          [prefix "-", prefix "+"],
+--         -- [binary "^" E.AssocLeft],
+--           [
+--            binary "*" E.AssocLeft,
+--            binary "/" E.AssocLeft
+--            -- ,binary "%" E.AssocLeft
+--           ],
+--           [
+--            binary "+" E.AssocLeft,
+--            binary "-" E.AssocLeft
+--           ]--,
+--         -- [binary "<" E.AssocNone
+--         --  ,binary ">" E.AssocNone]
+--         -- ,[binary "=" E.AssocRight]
+--         -- ,[prefix "not"]
+--         -- ,[binary "and" E.AssocLeft]
+--         -- ,[binary "or" E.AssocLeft]
+--         ]
+--     where
+--     binary name assoc = E.Infix (mkBinOp name <$ symbol name) assoc
+--     mkBinOp nm a b = BinaryOp a nm b
+--     prefix name = E.Prefix (PrefixOp name <$ symbol name)
