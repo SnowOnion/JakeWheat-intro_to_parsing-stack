@@ -1,10 +1,14 @@
 name:                intro-to-parsing-stack
 version:             0.1.0.0
-github:              "githubuser/intro-to-parsing-stack"
+github:              "https://github.com/SnowOnion/JakeWheat-intro_to_parsing-stack"
+# inherited from https://github.com/JakeWheat/intro_to_parsing/blob/master/README.asciidoc
 license:             BSD3
-author:              "Author name here"
-maintainer:          "example@example.com"
-copyright:           "2018 Author name here"
+# proper to say so?
+author:              "Jake Wheat, SnowOnion"
+maintainer:          "snowonionlee@gmail.com"
+# hmmm BSD3 + copyright = ? && proper to say so?
+copyright:           "2018 Jake Wheat, SnowOnion"
+
 
 extra-source-files:
 - README.md
@@ -17,11 +21,12 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/githubuser/intro-to-parsing-stack#readme>
+description:         Please see the README on GitHub at <https://github.com/SnowOnion/JakeWheat-intro_to_parsing-stack>
 
 dependencies:
 - base >= 4.7 && < 5
-- parsec == 3.1.9
+# - parsec == 3.1.9
+- parsec == 3.1.13.0
 
 library:
   source-dirs: src

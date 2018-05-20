@@ -1,0 +1,97 @@
+module Ch7 where
+--
+-- import Text.Parsec.String (Parser)
+-- import Text.Parsec.String.Combinator (many1, between)
+-- import Text.Parsec.String.Char (letter, char, digit, string, oneOf)
+--
+-- import Control.Applicative ((<$>), (<*>), (<*), (<|>), many, (<$))
+-- import Control.Monad (void)
+--
+-- import qualified Text.Parsec.String.Expr as E
+-- import FunctionsAndTypesForParsing
+--
+--
+-- -- data PlusTimesExpr = PteVar String
+-- --                    | PteNum Integer
+-- --                    | PteParens PlusTimesExpr
+-- --                    | Plus PlusTimesExpr PlusTimesExpr
+-- --                    | Times PlusTimesExpr PlusTimesExpr
+-- --                          deriving (Eq,Show)
+-- --
+-- -- plusTimesExpr :: Parser PlusTimesExpr
+-- -- plusTimesExpr = E.buildExpressionParser pteTable pteTerm
+-- --
+-- -- pteTable :: [[E.Operator PlusTimesExpr]]
+-- -- pteTable = [[E.Infix (Times <$ symbol "*") E.AssocLeft]
+-- --   ,[E.Infix (Plus <$ symbol "+") E.AssocLeft]]
+-- --
+-- -- pteTerm :: Parser PlusTimesExpr
+-- -- pteTerm = pteVar <|> pteNum <|> pteParens
+-- -- pteNum :: Parser PlusTimesExpr
+-- -- pteNum = PteNum <$> integer
+-- -- pteVar :: Parser PlusTimesExpr
+-- -- pteVar = PteVar <$> identifier
+-- -- pteParens :: Parser PlusTimesExpr
+-- -- pteParens = PteParens <$> between (symbol "(") (symbol ")") plusTimesExpr
+--
+-- whitespace :: Parser ()
+-- whitespace = void $ many $ oneOf " \n\t"
+-- lexeme :: Parser a -> Parser a
+-- lexeme p = p <* whitespace
+-- integer :: Parser Integer
+-- integer = read <$> lexeme (many1 digit)
+-- identifier :: Parser String
+-- identifier = lexeme ((:) <$> firstChar <*> many nonFirstChar)
+--   where
+--     firstChar = letter <|> char '_'
+--     nonFirstChar = digit <|> firstChar
+-- symbol :: String -> Parser String
+-- symbol s = lexeme $ string s
+--
+--
+-- data SimpleExpr = Num Integer
+--                 | Var String
+--                 | Parens SimpleExpr
+--                 | PrefixOp String SimpleExpr
+--                 | BinaryOp SimpleExpr String SimpleExpr
+--                    deriving (Eq,Show)
+--
+-- simpleExpr :: Parser SimpleExpr
+-- simpleExpr = E.buildExpressionParser table term
+--
+--
+-- table :: [[E.Operator SimpleExpr]]
+-- table = [
+--          -- [prefix "-", prefix "+"],
+--         -- [binary "^" E.AssocLeft],
+--           [
+--            binary "*" E.AssocLeft,
+--            binary "/" E.AssocLeft
+--            -- ,binary "%" E.AssocLeft
+--           ],
+--           [
+--            binary "+" E.AssocLeft,
+--            binary "-" E.AssocLeft
+--           ]--,
+--         -- [binary "<" E.AssocNone
+--         --  ,binary ">" E.AssocNone]
+--         -- ,[binary "=" E.AssocRight]
+--         -- ,[prefix "not"]
+--         -- ,[binary "and" E.AssocLeft]
+--         -- ,[binary "or" E.AssocLeft]
+--         ]
+--     where
+--     binary name assoc =
+--         E.Infix (mkBinOp name <$ symbol name) assoc
+--     mkBinOp nm a b = BinaryOp a nm b
+--     prefix name = E.Prefix (PrefixOp name <$ symbol name)
+--
+--
+-- term :: Parser SimpleExpr
+-- term = var <|> num <|> parens
+-- num :: Parser SimpleExpr
+-- num = Num <$> integer
+-- var :: Parser SimpleExpr
+-- var = Var <$> identifier
+-- parens :: Parser SimpleExpr
+-- parens = between (symbol "(") (symbol ")") simpleExpr

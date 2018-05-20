@@ -1,0 +1,48 @@
+module Ch3Less where
+--
+-- data SimpleExpr = Num Integer
+--                 | Var String
+--                 | Add SimpleExpr SimpleExpr
+--                 | Parens SimpleExpr
+--                   deriving (Eq,Show)
+--
+-- simpleExpr8 :: Parser SimpleExpr
+-- simpleExpr8 = chainl1 term8 op
+--   where
+--     op = do
+--         lexeme $ char '+'
+--         return Add
+--     term8 = term simpleExpr8
+--
+-- term :: Parser SimpleExpr -> Parser SimpleExpr
+-- term simpleExprImpl = numE <|> varE <|> parensEN simpleExprImpl
+--
+-- numE :: Parser SimpleExpr
+-- numE = do
+--     n <- lexeme $ many1 digit
+--     return $ Num $ read n
+--
+-- varE :: Parser SimpleExpr
+-- varE = lexeme $ do
+--     fc <- firstChar
+--     rest <- many nonFirstChar
+--     return $ Var (fc:rest)
+--   where
+--     firstChar = satisfy (\a -> isLetter a || a == '_')
+--     nonFirstChar = satisfy (\a -> isDigit a || isLetter a || a == '_')
+--
+-- parensEN :: Parser SimpleExpr -> Parser SimpleExpr
+-- parensEN simpleExprImpl = do
+--     lexeme $ char '('
+--     e <- simpleExprImpl
+--     lexeme $ char ')'
+--     return $ Parens e
+--
+-- lexeme :: Parser a -> Parser a
+-- lexeme p = do
+--            x <- p
+--            whitespace
+--            return x
+--
+-- whitespace :: Parser ()
+-- whitespace = void $ many $ oneOf "\r\n \t"
