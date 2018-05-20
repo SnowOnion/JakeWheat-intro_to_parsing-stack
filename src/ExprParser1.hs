@@ -9,6 +9,7 @@ import qualified Text.Parsec.String.Expr as E
 import FunctionsAndTypesForParsing
 
 import ExprDef(Expr(..))
+import DoubleLiteral(double)
 
 
 whitespace :: Parser ()
@@ -32,11 +33,11 @@ symbol s = lexeme $ string s
 -- 通用表达式，通用在何处呢？BinaryOp 表示二元运算符，PrefixOp 表示。这样可以任意扩展运算符的种类。
 -- 比如加入 % ^ < <= > >= ==
 -- 甚至赋值号 =
-data GenericExpr = Num Integer
-                | Var String
-                | Parens GenericExpr
-                | PrefixOp String GenericExpr
-                | BinaryOp GenericExpr String GenericExpr
+data GenericExpr = Num Double
+                 -- | Var String
+                 -- | Parens GenericExpr
+                 | PrefixOp String GenericExpr
+                 | BinaryOp GenericExpr String GenericExpr
                    deriving (Eq,Show)
 
 genericExpr :: Parser GenericExpr
@@ -58,14 +59,18 @@ table = [
 
 
 term :: Parser GenericExpr
-term = var <|> num <|> parens
+term =
+  -- var <|>
+  num <|> parens
 num :: Parser GenericExpr
-num = Num <$> integer
-var :: Parser GenericExpr
-var = Var <$> identifier
+num = Num <$> double
+-- var :: Parser GenericExpr
+-- var = Var <$> identifier
 parens :: Parser GenericExpr
 parens = between (symbol "(") (symbol ")") genericExpr
 
+-- http://hackage.haskell.org/package/parsec-3.1.13.0/docs/src/Text.Parsec.Token.html#local-6989586621679063917
+-- symbol name = lexeme (string name)
 
 
 -- (BinaryOp (BinaryOp (BinaryOp (Num 0) "*" (Num 1)) "/" (Num 2)) "*" (Num 3))
@@ -77,11 +82,12 @@ src =
    "*" (Num 3)
 
 genericExprToExpr :: GenericExpr -> Expr
-genericExprToExpr (Num x) = Lit (fromIntegral x :: Double)
+genericExprToExpr (Num x) = Lit x
 genericExprToExpr (PrefixOp "-" ge) = Sub (Lit 0) (genericExprToExpr ge)
+genericExprToExpr (PrefixOp "+" ge) = genericExprToExpr ge
 genericExprToExpr (BinaryOp ge1 op ge2) = case op of
   "*" -> Mul (genericExprToExpr ge1) (genericExprToExpr ge2)
   "/" -> Div (genericExprToExpr ge1) (genericExprToExpr ge2)
   "+" -> Add (genericExprToExpr ge1) (genericExprToExpr ge2)
   "-" -> Sub (genericExprToExpr ge1) (genericExprToExpr ge2)
-genericExprToExpr (Var n) = Var1 n
+-- genericExprToExpr (Var n) = Var1 n
